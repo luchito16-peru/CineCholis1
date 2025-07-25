@@ -1,0 +1,797 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 02-12-2024 a las 07:38:27
+-- Versión del servidor: 10.4.28-MariaDB
+-- Versión de PHP: 8.2.4
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+
+create database cineproyect
+
+DELIMITER $$
+
+--
+-- Procedimientos
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizar_pelicula_fechas` (IN `p_id` INT, IN `p_fechas_disponibles` VARCHAR(255), IN `p_nuevas_fechas` TEXT)   BEGIN
+    -- Actualiza la columna fechas_disponibles en la tabla peliculas
+    UPDATE peliculas
+    SET fechas_disponibles = p_fechas_disponibles
+    WHERE id = p_id;
+
+    -- Borra las fechas antiguas para esta película
+    DELETE FROM peliculas_fechas
+    WHERE id_pelicula = p_id;
+
+    -- Inserta las nuevas fechas
+    SET @sql = CONCAT('INSERT INTO peliculas_fechas (id_pelicula, fecha_disponible) VALUES ', p_nuevas_fechas);
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END$$
+
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `asientos`
+--
+
+CREATE TABLE `asientos` (
+  `id` int(11) NOT NULL,
+  `sala_id` int(11) NOT NULL,
+  `fila` varchar(5) NOT NULL,
+  `numero` int(11) NOT NULL,
+  `estado` enum('disponible','reservado') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `asientos`
+--
+
+INSERT INTO `asientos` (`id`, `sala_id`, `fila`, `numero`, `estado`) VALUES
+(1, 1, 'A', 1, 'disponible'),
+(2, 1, 'A', 2, 'disponible'),
+(3, 1, 'A', 3, 'disponible'),
+(4, 1, 'A', 4, 'disponible'),
+(5, 1, 'A', 5, 'disponible'),
+(6, 1, 'A', 6, 'disponible'),
+(7, 1, 'A', 7, 'disponible'),
+(8, 1, 'A', 8, 'disponible'),
+(9, 1, 'A', 9, 'disponible'),
+(10, 1, 'A', 10, 'disponible'),
+(11, 1, 'A', 11, 'disponible'),
+(12, 1, 'A', 12, 'disponible'),
+(13, 1, 'A', 13, 'disponible'),
+(14, 1, 'A', 14, 'disponible'),
+(15, 1, 'A', 15, 'disponible'),
+(16, 1, 'B', 1, 'disponible'),
+(17, 1, 'B', 2, 'disponible'),
+(18, 1, 'B', 3, 'disponible'),
+(19, 1, 'B', 4, 'disponible'),
+(20, 1, 'B', 5, 'disponible'),
+(21, 1, 'B', 6, 'disponible'),
+(22, 1, 'B', 7, 'disponible'),
+(23, 1, 'B', 8, 'disponible'),
+(24, 1, 'B', 9, 'disponible'),
+(25, 1, 'B', 10, 'disponible'),
+(26, 1, 'B', 11, 'disponible'),
+(27, 1, 'B', 12, 'disponible'),
+(28, 1, 'B', 13, 'disponible'),
+(29, 1, 'B', 14, 'disponible'),
+(30, 1, 'B', 15, 'disponible'),
+(31, 1, 'C', 1, 'disponible'),
+(32, 1, 'C', 2, 'disponible'),
+(33, 1, 'C', 3, 'disponible'),
+(34, 1, 'C', 4, 'disponible'),
+(35, 1, 'C', 5, 'disponible'),
+(36, 1, 'C', 6, 'disponible'),
+(37, 1, 'C', 7, 'disponible'),
+(38, 1, 'C', 8, 'disponible'),
+(39, 1, 'C', 9, 'disponible'),
+(40, 1, 'C', 10, 'disponible'),
+(41, 1, 'C', 11, 'disponible'),
+(42, 1, 'C', 12, 'disponible'),
+(43, 1, 'C', 13, 'disponible'),
+(44, 1, 'C', 14, 'disponible'),
+(45, 1, 'C', 15, 'disponible'),
+(46, 1, 'D', 1, 'disponible'),
+(47, 1, 'D', 2, 'disponible'),
+(48, 1, 'D', 3, 'disponible'),
+(49, 1, 'D', 4, 'disponible'),
+(50, 1, 'D', 5, 'disponible'),
+(51, 1, 'D', 6, 'disponible'),
+(52, 1, 'D', 7, 'disponible'),
+(53, 1, 'D', 8, 'disponible'),
+(54, 1, 'D', 9, 'disponible'),
+(55, 1, 'D', 10, 'disponible'),
+(56, 1, 'D', 11, 'disponible'),
+(57, 1, 'D', 12, 'disponible'),
+(58, 1, 'D', 13, 'disponible'),
+(59, 1, 'D', 14, 'disponible'),
+(60, 1, 'D', 15, 'disponible'),
+(61, 1, 'E', 1, 'disponible'),
+(62, 1, 'E', 2, 'disponible'),
+(63, 1, 'E', 3, 'disponible'),
+(64, 1, 'E', 4, 'disponible'),
+(65, 1, 'E', 5, 'disponible'),
+(66, 1, 'E', 6, 'disponible'),
+(67, 1, 'E', 7, 'disponible'),
+(68, 1, 'E', 8, 'disponible'),
+(69, 1, 'E', 9, 'disponible'),
+(70, 1, 'E', 10, 'disponible'),
+(71, 1, 'E', 11, 'disponible'),
+(72, 1, 'E', 12, 'disponible'),
+(73, 1, 'E', 13, 'disponible'),
+(74, 1, 'E', 14, 'disponible'),
+(75, 1, 'E', 15, 'disponible'),
+(76, 1, 'F', 1, 'disponible'),
+(77, 1, 'F', 2, 'disponible'),
+(78, 1, 'F', 3, 'disponible'),
+(79, 1, 'F', 4, 'disponible'),
+(80, 1, 'F', 5, 'disponible'),
+(81, 1, 'F', 6, 'disponible'),
+(82, 1, 'F', 7, 'disponible'),
+(83, 1, 'F', 8, 'disponible'),
+(84, 1, 'F', 9, 'disponible'),
+(85, 1, 'F', 10, 'disponible'),
+(86, 1, 'F', 11, 'disponible'),
+(87, 1, 'F', 12, 'disponible'),
+(88, 1, 'F', 13, 'disponible'),
+(89, 1, 'F', 14, 'disponible'),
+(90, 1, 'F', 15, 'disponible'),
+(91, 1, 'G', 1, 'disponible'),
+(92, 1, 'G', 2, 'disponible'),
+(93, 1, 'G', 3, 'disponible'),
+(94, 1, 'G', 4, 'disponible'),
+(95, 1, 'G', 5, 'disponible'),
+(96, 1, 'G', 6, 'disponible'),
+(97, 1, 'G', 7, 'disponible'),
+(98, 1, 'G', 8, 'disponible'),
+(99, 1, 'G', 9, 'disponible'),
+(100, 1, 'G', 10, 'disponible'),
+(101, 1, 'G', 11, 'disponible'),
+(102, 1, 'G', 12, 'disponible'),
+(103, 1, 'G', 13, 'disponible'),
+(104, 1, 'G', 14, 'disponible'),
+(105, 1, 'G', 15, 'disponible'),
+(106, 1, 'H', 1, 'disponible'),
+(107, 1, 'H', 2, 'disponible'),
+(108, 1, 'H', 3, 'disponible'),
+(109, 1, 'H', 4, 'disponible'),
+(110, 1, 'H', 5, 'disponible'),
+(111, 1, 'H', 6, 'disponible'),
+(112, 1, 'H', 7, 'disponible'),
+(113, 1, 'H', 8, 'disponible'),
+(114, 1, 'H', 9, 'disponible'),
+(115, 1, 'H', 10, 'disponible'),
+(116, 1, 'H', 11, 'disponible'),
+(117, 1, 'H', 12, 'disponible'),
+(118, 1, 'H', 13, 'disponible'),
+(119, 1, 'H', 14, 'disponible'),
+(120, 1, 'H', 15, 'disponible'),
+(121, 1, 'I', 1, 'disponible'),
+(122, 1, 'I', 2, 'disponible'),
+(123, 1, 'I', 3, 'disponible'),
+(124, 1, 'I', 4, 'disponible'),
+(125, 1, 'I', 5, 'disponible'),
+(126, 1, 'I', 6, 'disponible'),
+(127, 1, 'I', 7, 'disponible'),
+(128, 1, 'I', 8, 'disponible'),
+(129, 1, 'I', 9, 'disponible'),
+(130, 1, 'I', 10, 'disponible'),
+(131, 1, 'I', 11, 'disponible'),
+(132, 1, 'I', 12, 'disponible'),
+(133, 1, 'I', 13, 'disponible'),
+(134, 1, 'I', 14, 'disponible'),
+(135, 1, 'I', 15, 'disponible'),
+(136, 1, 'J', 1, 'disponible'),
+(137, 1, 'J', 2, 'disponible'),
+(138, 1, 'J', 3, 'disponible'),
+(139, 1, 'J', 4, 'disponible'),
+(140, 1, 'J', 5, 'disponible'),
+(141, 1, 'J', 6, 'disponible'),
+(142, 1, 'J', 7, 'disponible'),
+(143, 1, 'J', 8, 'disponible'),
+(144, 1, 'J', 9, 'disponible'),
+(145, 1, 'J', 10, 'disponible'),
+(146, 1, 'J', 11, 'disponible'),
+(147, 1, 'J', 12, 'disponible'),
+(148, 1, 'J', 13, 'disponible'),
+(149, 1, 'J', 14, 'disponible'),
+(150, 1, 'J', 15, 'disponible'),
+(151, 2, 'A', 1, 'disponible'),
+(152, 2, 'A', 2, 'disponible'),
+(153, 2, 'A', 3, 'disponible'),
+(154, 2, 'A', 4, 'disponible'),
+(155, 2, 'A', 5, 'disponible'),
+(156, 2, 'A', 6, 'disponible'),
+(157, 2, 'A', 7, 'disponible'),
+(158, 2, 'A', 8, 'disponible'),
+(159, 2, 'A', 9, 'disponible'),
+(160, 2, 'A', 10, 'disponible'),
+(161, 2, 'A', 11, 'disponible'),
+(162, 2, 'A', 12, 'disponible'),
+(163, 2, 'A', 13, 'disponible'),
+(164, 2, 'A', 14, 'disponible'),
+(165, 2, 'A', 15, 'disponible'),
+(166, 2, 'B', 1, 'disponible'),
+(167, 2, 'B', 2, 'disponible'),
+(168, 2, 'B', 3, 'disponible'),
+(169, 2, 'B', 4, 'disponible'),
+(170, 2, 'B', 5, 'disponible'),
+(171, 2, 'B', 6, 'disponible'),
+(172, 2, 'B', 7, 'disponible'),
+(173, 2, 'B', 8, 'disponible'),
+(174, 2, 'B', 9, 'disponible'),
+(175, 2, 'B', 10, 'disponible'),
+(176, 2, 'B', 11, 'disponible'),
+(177, 2, 'B', 12, 'disponible'),
+(178, 2, 'B', 13, 'disponible'),
+(179, 2, 'B', 14, 'disponible'),
+(180, 2, 'B', 15, 'disponible'),
+(181, 2, 'C', 1, 'disponible'),
+(182, 2, 'C', 2, 'disponible'),
+(183, 2, 'C', 3, 'disponible'),
+(184, 2, 'C', 4, 'disponible'),
+(185, 2, 'C', 5, 'disponible'),
+(186, 2, 'C', 6, 'disponible'),
+(187, 2, 'C', 7, 'disponible'),
+(188, 2, 'C', 8, 'disponible'),
+(189, 2, 'C', 9, 'disponible'),
+(190, 2, 'C', 10, 'disponible'),
+(191, 2, 'C', 11, 'disponible'),
+(192, 2, 'C', 12, 'disponible'),
+(193, 2, 'C', 13, 'disponible'),
+(194, 2, 'C', 14, 'disponible'),
+(195, 2, 'C', 15, 'disponible'),
+(196, 2, 'D', 1, 'disponible'),
+(197, 2, 'D', 2, 'disponible'),
+(198, 2, 'D', 3, 'disponible'),
+(199, 2, 'D', 4, 'disponible'),
+(200, 2, 'D', 5, 'disponible');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `cines`
+--
+
+CREATE TABLE `cines` (
+  `id` int(11) NOT NULL,
+  `nombre_cine` varchar(100) NOT NULL,
+  `direccion_cine` varchar(255) NOT NULL,
+  `telefono_cine` varchar(20) DEFAULT NULL,
+  `correo_cine` varchar(100) DEFAULT NULL,
+  `id_ciudad` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `cines`
+--
+
+INSERT INTO `cines` (`id`, `nombre_cine`, `direccion_cine`, `telefono_cine`, `correo_cine`, `id_ciudad`) VALUES
+(1, 'Cinecholis Lima Norte', 'Av. Alfredo Mendiola 3695, Lima', '01-555-1234', 'contacto@cinepolislima.pe', 1),
+(2, 'Cinecholis Arequipa Centro', 'Av. Comandante Espinar 789, Lima', '01-555-5678', 'info@movieplexlima.pe', 2),
+(3, 'Cinecholis Cuzco Plaza', 'Jockey Plaza, Av. Javier Prado Este 4200, Lima', '01-555-9101', 'info@cinemarkjockey.pe', 3),
+(4, 'Cinecholis Trujillo Valle', 'Av. José Larco 812, Miraflores, Lima', '01-555-2323', 'info@uvkpe.pe', 4),
+(5, 'Piuracholis La Rambla', 'Av. La Rambla 100, San Borja, Lima', '01-555-3434', 'contacto@cineplanetlima.pe', 5);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `ciudades`
+--
+
+CREATE TABLE `ciudades` (
+  `id` int(11) NOT NULL,
+  `nombre_ciudad` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `ciudades`
+--
+
+INSERT INTO `ciudades` (`id`, `nombre_ciudad`) VALUES
+(1, 'Lima'),
+(2, 'Arequipa'),
+(3, 'Cusco'),
+(4, 'Trujillo'),
+(5, 'Piura');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `funciones`
+--
+
+CREATE TABLE `funciones` (
+  `id` int(11) NOT NULL,
+  `id_pelicula` int(11) DEFAULT NULL,
+  `id_cine` int(11) DEFAULT NULL,
+  `horario` time DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `funciones`
+--
+
+INSERT INTO `funciones` (`id`, `id_pelicula`, `id_cine`, `horario`) VALUES
+(1, 1, 1, '14:00:00'),
+(4, 2, 1, '13:30:00'),
+(5, 2, 4, '16:15:00'),
+(6, 2, 5, '19:45:00'),
+(7, 3, 1, '15:00:00'),
+(8, 3, 3, '18:30:00'),
+(9, 3, 5, '22:00:00'),
+(10, 4, 2, '12:00:00'),
+(11, 4, 4, '15:30:00'),
+(12, 5, 2, '13:00:00'),
+(13, 5, 3, '16:45:00'),
+(14, 5, 4, '19:00:00'),
+(15, 6, 3, '11:45:00'),
+(16, 6, 4, '14:20:00'),
+(18, 6, 1, '20:35:00'),
+(19, 1, 2, '17:30:00'),
+(20, 1, 4, '21:00:00'),
+(25, 3, 2, '15:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pagos_targeta`
+--
+
+CREATE TABLE `pagos_targeta` (
+  `id` int(11) NOT NULL,
+  `card_number` varbinary(255) NOT NULL,
+  `expiry_date` varchar(7) NOT NULL,
+  `cvv` varbinary(255) NOT NULL,
+  `full_name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `fecha` timestamp NOT NULL DEFAULT current_timestamp(),
+  `tipo_targeta` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `pagos_targeta`
+--
+
+INSERT INTO `pagos_targeta` (`id`, `card_number`, `expiry_date`, `cvv`, `full_name`, `email`, `fecha`, `tipo_targeta`) VALUES
+(95, 0x7247617636434c7459733375726d6f3167334167727675416b54794b6e6e6c772b417971784658484d4c493d, '12/22', 0x78763478303533436d635638454a5461596e2b7a39413d3d, 'lolollolo', 'luiscarven@gmail.com', '2024-09-29 18:51:38', 'Mastercard'),
+(96, 0x7146774258383263786675504a435a72314a6b5946485457676c324175714e69447374664f2b6f7a452f383d, '12/12', 0x3733727934724f5478457a595270363867414b6532513d3d, 'nathylakagadiña', 'nathy@gmail.com', '2024-09-29 18:56:39', 'Mastercard'),
+(97, 0x656c486d344f387835715a34305737705a343844776f63537954444e697451444839422f5a4e63393739773d, '11/11', 0x41546f6459674f326e374768564a597733364d4862673d3d, 'op', 'que@gmail.com', '2024-09-29 18:58:57', 'Mastercard'),
+(98, 0x5737777944614b776b415773623942717258576a5070654b4963533039374d6c2b77527767702f307545453d, '11/11', 0x41546f6459674f326e374768564a597733364d4862673d3d, 'ñpñpñ', 'anthony@gmail.com', '2024-09-29 20:09:37', 'Visa'),
+(99, 0x6f55653047623744756152693675516679364561636979707950776371534c6764493531586e344167726b3d, '11/11', 0x41546f6459674f326e374768564a597733364d4862673d3d, 'ñpñpñ', 'anthony@gmail.com', '2024-09-29 20:10:00', 'Visa'),
+(100, 0x75613341346e32672f545453486a7779754d70456d5039642f2f6551336730366d504b444d6a364f6b71413d, '12/22', 0x64524859463553782b4b4e53795a4e463039647465513d3d, 'llllll', 'anthony@gmail.com', '2024-09-29 20:17:06', 'Mastercard'),
+(101, 0x634454426a34574770793467516e634d634a354b7a2f39642f2f6551336730366d504b444d6a364f6b71413d, '11/11', 0x41546f6459674f326e374768564a597733364d4862673d3d, 'ñññññ', 'anthony@gmail.com', '2024-09-29 20:18:51', 'Visa'),
+(102, 0x76374a6e576b527852647a627231773246385651344d783763704e62365945702b466e4c614f44774f5a733d, '11/11', 0x41546f6459674f326e374768564a597733364d4862673d3d, 'jjjjjj', 'anthony@gmail.com', '2024-09-29 20:22:00', 'Mastercard'),
+(103, 0x646e67523463765559614842674f4e4c6c6e5977466639642f2f6551336730366d504b444d6a364f6b71413d, '12/22', 0x64524859463553782b4b4e53795a4e463039647465513d3d, 'fffffff', 'anthony@gmail.com', '2024-09-29 20:24:52', 'Visa'),
+(104, 0x75613341346e32672f545453486a7779754d70456d5039642f2f6551336730366d504b444d6a364f6b71413d, '11/11', 0x41546f6459674f326e374768564a597733364d4862673d3d, 'ññññññ', 'anthony@gmail.com', '2024-09-29 20:28:41', 'Mastercard'),
+(105, 0x76374a6e576b527852647a627231773246385651344b744c736f754b734270356a664938302f52316b78773d, '11/11', 0x41546f6459674f326e374768564a597733364d4862673d3d, 'jjjjj', 'anthony@gmail.com', '2024-09-29 20:31:00', 'Mastercard'),
+(106, 0x75613341346e32672f545453486a7779754d70456d5039642f2f6551336730366d504b444d6a364f6b71413d, '12/52', 0x2f31332f3935446544547159386f4d79506f36536f413d3d, 'kkkkkk', 'anthony@gmail.com', '2024-09-29 20:33:44', 'Mastercard'),
+(107, 0x75613341346e32672f545453486a7779754d70456d5039642f2f6551336730366d504b444d6a364f6b71413d, '12/22', 0x64524859463553782b4b4e53795a4e463039647465513d3d, 'llll', 'anthony@gmail.com', '2024-09-29 20:34:33', 'Mastercard'),
+(108, 0x75613341346e32672f545453486a7779754d70456d4b744c736f754b734270356a664938302f52316b78773d, '11/22', 0x2f31332f3935446544547159386f4d79506f36536f413d3d, 'ttttttt', 'anthony@gmail.com', '2024-09-29 20:35:25', 'Mastercard'),
+(109, 0x75613341346e32672f545453486a7779754d70456d5039642f2f6551336730366d504b444d6a364f6b71413d, '11/22', 0x335164475948786f354b586b384c415938756e3237673d3d, 'kkkkk', 'anthony@gmail.com', '2024-09-29 20:42:48', 'Mastercard'),
+(110, 0x2b61567958357a6570666b503866766f4b52526d78555a7a48464d35464d56686e49724c6b6172426544343d, '12/52', 0x2f31332f3935446544547159386f4d79506f36536f413d3d, 'pppppp', 'anthony@gmail.com', '2024-09-29 20:44:23', 'Visa'),
+(111, 0x6264734676395763474845466847704272596d704f4934324149486734356b78544b677359726b2f3170453d, '12/22', 0x51347342775865755a62525a4a2f55635556383933673d3d, 'pppppppp', 'anthony@gmail.com', '2024-09-29 21:01:43', 'American Express'),
+(112, 0x4e6e7a35455a2f674772703351612b50774b6d705a4a482b4c6a7a5030685648503266517072316d7354553d, '11/22', 0x334b726573445531556b614450694b51517a764941773d3d, 'tyyyyyyyyy', 'nathy@gmail.com', '2024-09-29 21:02:26', 'Mastercard'),
+(113, 0x6249712f45645035506b526a7a764a742f45747a7a2b6174504b31374450764846765236727930777849593d, '12/90', 0x7841642f4c5173432b467a67336d6f57456b724f59413d3d, 'Anthony', 'anthony@gmail.com', '2024-09-30 02:19:45', 'American Express'),
+(114, 0x684568526b3266704843476d426c48616d36434c676853684e36436f4e6d316f615037455547386c7943553d, '12/24', 0x7a73302f652b30753432624f2f77744271386f3946673d3d, 'Anthony', 'anthony@gmail.com', '2024-09-30 18:44:18', 'Mastercard'),
+(115, 0x5a34767256415938305554426631715a3933354c413434324149486734356b78544b677359726b2f3170453d, '12/34', 0x56435a4a424541494d4c594863764f5a5841336d35513d3d, 'fweweff', 'anthony@gmail.com', '2024-09-30 18:45:46', 'American Express'),
+(116, 0x516f68636f2f6a4b386d30733561316a6e67323670756174504b31374450764846765236727930777849593d, '12/33', 0x51347342775865755a62525a4a2f55635556383933673d3d, 'PRUEBA', 'nathy@gmail.com', '2024-09-30 19:55:14', 'American Express'),
+(117, 0x634454426a34574770793467516e634d634a354b7a2f39642f2f6551336730366d504b444d6a364f6b71413d, '05/26', 0x62786d49716757356570686a52434237382b6d6f6e513d3d, 'carlos alberto', 'carlitos@gmail.com', '2024-09-30 21:00:32', 'Visa'),
+(118, 0x51782f51442b73575334677a704875692b2f76673779566e6a7a754c663139666950752f69514d484a6f553d, '12/45', 0x7757654934737973374974336b4b562b6871644c4f673d3d, 'carlos alberto', 'carlitos@gmail.com', '2024-09-30 21:01:43', 'Mastercard'),
+(119, 0x687261436d2b777839524f4c7a4c3537793847624b385055742f653248336f4a68637a6e6138486c3965733d, '12/25', 0x412f576d4a413671356d5158654c79415554483459773d3d, 'anthony', 'anthony@gmail.com', '2024-09-30 21:05:06', 'American Express'),
+(120, 0x3943515473526c447031732f586b4f313079466538654a73654b4a526f7053467a2b3946442f517a4871513d, '12/32', 0x454b6d574d4c31742b3876634f354246545a473168773d3d, 'Anthony', 'anthony@gmail.com', '2024-10-26 03:42:51', 'Mastercard'),
+(121, 0x2f504b51462b504938716e626b705a4a4a757a36424553554661786e5143422b4a624154674e5346534c413d, '12/26', 0x7a73302f652b30753432624f2f77744271386f3946673d3d, 'Victor Raul Ayma Rozas', 'victoraymarozas@gmail.com', '2024-10-28 01:44:40', 'Visa'),
+(122, 0x4b734f777459574e5076786d2f3330626577574158656174504b31374450764846765236727930777849593d, '12/12', 0x56435a4a424541494d4c594863764f5a5841336d35513d3d, 'anthony', 'anthony@gmail.com', '2024-10-28 03:14:33', 'American Express'),
+(123, 0x6738574378424d4b3539775a59355133774b6a4a4e6e6d62587a624e39446666436a5362677062595173343d, '12/56', 0x7a73302f652b30753432624f2f77744271386f3946673d3d, 'Anthony', 'osc@gmail.com', '2024-10-28 03:23:24', 'Visa'),
+(124, 0x4f4d464766656644562f3833306b6c344e563131502f48642b504d755435425158444954523137377377553d, '12/24', 0x636354385a6559484c614363636b6e61416f5a6f6b413d3d, 'Anthony', 'anthony@gmail.com', '2024-10-28 20:38:24', 'American Express'),
+(125, 0x4f4d464766656644562f3833306b6c344e563131502f48642b504d755435425158444954523137377377553d, '12/24', 0x636354385a6559484c614363636b6e61416f5a6f6b413d3d, 'Anthony', 'anthony@gmail.com', '2024-10-28 20:39:30', 'American Express'),
+(126, 0x526c6343756473534a586178725930397151354b434934324149486734356b78544b677359726b2f3170453d, '01/26', 0x6378396e58696e49437049556869716449646a3779413d3d, 'samuel', 'samu@gmail.com', '2024-10-28 21:00:41', 'American Express'),
+(127, 0x766d4e52546d702b79502b5a46354659787a54716c38766a3156785463456e4c7170623364706d554f71303d, '12/26', 0x61646e48586e697a7144726838777539462b4f3548773d3d, 'luis', 'luis@gmail.com', '2024-10-28 21:41:45', 'Visa'),
+(128, 0x567033684946744d7258685436416e4361456f734b5a7a776244586579567434687156584b77667559656b3d, '12/32', 0x56435a4a424541494d4c594863764f5a5841336d35513d3d, 'Anthony', 'anthony@gmail.com', '2024-11-28 04:00:43', 'American Express'),
+(129, 0x73586c484a4a55626547444f355336565659765451704a76436b6f66696844667a444b63644246344857593d, '12/31', 0x7a73302f652b30753432624f2f77744271386f3946673d3d, 'Oscar Raúl Cotrina Zelada', 'osc@gmail.com', '2024-12-02 04:38:03', 'Visa'),
+(130, 0x38536e70334a3375616d686d68783055705658776d5a7a776244586579567434687156584b77667559656b3d, '12/31', 0x626f79324a34756e43747535515a777332765a434d773d3d, 'Oscar Raúl Cotrina Zelada', 'osc@gmail.com', '2024-12-02 04:39:12', 'American Express');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pagos_yape`
+--
+
+CREATE TABLE `pagos_yape` (
+  `id` int(11) NOT NULL,
+  `celular` varchar(15) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `fecha` datetime NOT NULL DEFAULT current_timestamp(),
+  `monto_total` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `pagos_yape`
+--
+
+INSERT INTO `pagos_yape` (`id`, `celular`, `email`, `fecha`, `monto_total`) VALUES
+(1, '956964896', 'que@gmail.com', '2024-09-28 18:33:04', 92.00),
+(2, '953 658 965', 'que@gmail.com', '2024-09-28 18:35:33', 166.00),
+(3, '963256145', 'anthony@gmail.com', '2024-09-29 02:46:20', 23.00),
+(4, '956964896', 'anthony@gmail.com', '2024-09-29 07:38:41', 46.00),
+(5, '988888888', 'luiscarven@gmail.com', '2024-09-29 08:06:31', 138.00),
+(6, '988888888', 'luiscarven@gmail.com', '2024-09-29 08:10:05', 138.00),
+(7, '956964896', 'luiscarven@gmail.com', '2024-09-29 08:53:24', 138.00),
+(8, '999999999', 'luiscarven@gmail.com', '2024-09-29 08:54:03', 138.00),
+(9, '953658965', 'nathy@gmail.com', '2024-09-29 08:57:23', 155.00),
+(10, '985858585', 'que@gmail.com', '2024-09-29 08:59:23', 63.00),
+(11, '956 964 896', 'anthony@gmail.com', '2024-09-29 10:39:43', 46.00),
+(12, '953 658 965', 'anthony@gmail.com', '2024-09-29 10:42:59', 46.00),
+(13, '953 658 965', 'anthony@gmail.com', '2024-09-29 10:43:58', 46.00),
+(14, '956964896', 'anthony@gmail.com', '2024-09-29 10:46:32', 46.00),
+(15, '956964896', 'anthony@gmail.com', '2024-09-29 10:49:45', 46.00),
+(16, '956964896', 'anthony@gmail.com', '2024-09-29 10:50:06', 46.00),
+(17, '956964896', 'anthony@gmail.com', '2024-09-29 11:01:19', 46.00),
+(18, '984896596', 'nathy@gmail.com', '2024-09-29 11:02:56', 69.00),
+(19, '981234123', 'anthony@gmail.com', '2024-09-30 13:44:58', 129.00),
+(20, '981234123', 'nathy@gmail.com', '2024-09-30 14:55:31', 155.00),
+(21, '985968589', 'carlitos@gmail.com', '2024-09-30 16:01:19', 60.00),
+(22, '981234123', 'anthony@gmail.com', '2024-10-25 22:43:05', 50.00),
+(23, '970882229', 'victoraymarozas@gmail.com', '2024-10-27 20:55:59', 46.00),
+(24, '987654321', 'anthony@gmail.com', '2024-10-27 22:14:53', 30.00),
+(25, '987654321', 'osc@gmail.com', '2024-10-27 22:23:43', 40.00),
+(26, '987654321', 'osc@gmail.com', '2024-10-27 22:23:52', 40.00);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pelicula`
+--
+
+CREATE TABLE `pelicula` (
+  `id` int(11) NOT NULL,
+  `nombre_pelicula` varchar(255) NOT NULL,
+  `sinopsis` text DEFAULT NULL,
+  `director` varchar(255) DEFAULT NULL,
+  `idioma` varchar(100) DEFAULT NULL,
+  `imagen` varchar(255) DEFAULT NULL,
+  `genero` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `pelicula`
+--
+
+INSERT INTO `pelicula` (`id`, `nombre_pelicula`, `sinopsis`, `director`, `idioma`, `imagen`, `genero`) VALUES
+(1, 'Alien', 'La tripulación de una nave espacial lucha por sobrevivir contra un extraterrestre mortal.', 'Ridley Scott', 'Inglés', '../img/../img/../img/alien.jpeg', 'Terror'),
+(2, 'Amélie', 'Una joven en París decide mejorar la vida de quienes la rodean.', 'Jean-Pierre Jeunet', 'Francés', '../img/amelie.jpg', 'Drama'),
+(3, 'El Padrino', 'La historia de la familia Corleone y su lucha por el poder.', 'Francis Ford Coppola', 'Inglés', '../img/elpadrino.jpg', 'Acción'),
+(4, 'El Señor de los Anillos: La Comunidad del Anillo', 'Un hobbit y sus amigos deben destruir un anillo poderoso.', 'Peter Jackson', 'Inglés', '../img/señoranillos.jpeg', 'Ciencia Ficción'),
+(5, 'La Matrix', 'Un programador descubre que la realidad que conoce es una simulación.', 'Lana Wachowski, Lilly Wachowski', 'Inglés', '../img/../img/../img/../img/../img/lamatrix.jpg', 'Acción'),
+(6, 'Parasite', 'Una familia pobre se infiltra en la vida de una familia rica.', 'Bong Joon-ho', 'Coreano', '../img/../img/parasite.jpeg', 'Ciencia Ficción');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `registro_ventas`
+--
+
+CREATE TABLE `registro_ventas` (
+  `id` int(11) NOT NULL,
+  `asientos_seleccionados` varchar(255) NOT NULL,
+  `fecha_compra` datetime NOT NULL,
+  `monto_total` decimal(10,2) NOT NULL,
+  `cine` varchar(100) DEFAULT NULL,
+  `sala` varchar(100) DEFAULT NULL,
+  `tipo_pago` varchar(50) DEFAULT NULL,
+  `id_usuario` int(11) DEFAULT NULL,
+  `id_pago_yape` int(11) DEFAULT NULL,
+  `id_pago_targeta` int(11) DEFAULT NULL,
+  `id_pelicula` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `registro_ventas`
+--
+
+INSERT INTO `registro_ventas` (`id`, `asientos_seleccionados`, `fecha_compra`, `monto_total`, `cine`, `sala`, `tipo_pago`, `id_usuario`, `id_pago_yape`, `id_pago_targeta`, `id_pelicula`) VALUES
+(45, 'G10, G11, G12', '2024-09-29 08:59:23', 63.00, 'Cinecholis Lima Norte', '3', 'Yape', 14, 10, NULL, NULL),
+(47, 'F8, F9', '2024-09-29 10:18:51', 46.00, 'Cinecholis Arequipa Centro', '8', 'Visa', 13, NULL, 101, NULL),
+(48, 'F8, F9', '2024-09-29 10:35:25', 46.00, 'Cinecholis Arequipa Centro', '8', 'Mastercard', 13, NULL, 108, 1),
+(49, 'F8, F9', '2024-09-29 10:39:43', 46.00, 'Cinecholis Arequipa Centro', '8', 'Yape', 13, 11, NULL, NULL),
+(50, 'F8, F9', '2024-09-29 10:42:48', 46.00, 'Cinecholis Arequipa Centro', '8', 'Mastercard', 13, NULL, 109, 1),
+(51, 'F8, F9', '2024-09-29 10:42:59', 46.00, 'Cinecholis Arequipa Centro', '8', 'Yape', 13, 12, NULL, NULL),
+(52, 'F8, F9', '2024-09-29 10:43:58', 46.00, 'Cinecholis Arequipa Centro', '8', 'Yape', 13, 13, NULL, NULL),
+(53, 'F8, F9', '2024-09-29 10:44:23', 46.00, 'Cinecholis Arequipa Centro', '8', 'Visa', 13, NULL, 110, 1),
+(54, 'F8, F9', '2024-09-29 10:46:32', 46.00, 'Cinecholis Arequipa Centro', '8', 'Yape', 13, 14, NULL, NULL),
+(55, 'F8, F9', '2024-09-29 10:50:06', 46.00, 'Cinecholis Arequipa Centro', '8', 'Yape', 13, 16, NULL, NULL),
+(56, 'F8, F9', '2024-09-29 11:01:19', 46.00, 'Cinecholis Arequipa Centro', '8', 'Yape', 13, 17, NULL, 1),
+(57, 'F8, F9', '2024-09-29 11:01:43', 46.00, 'Cinecholis Arequipa Centro', '8', 'American Express', 13, NULL, 111, 1),
+(58, 'F13, F14, F15', '2024-09-29 11:02:26', 69.00, 'Cinecholis Trujillo Valle', '16', 'Mastercard', 15, NULL, 112, 2),
+(59, 'F13, F14, F15', '2024-09-29 11:02:56', 69.00, 'Cinecholis Trujillo Valle', '16', 'Yape', 15, 18, NULL, 2),
+(60, 'D4, D6, D8, D5', '2024-09-29 21:19:46', 86.00, 'Cinecholis Lima Norte', '4', 'American Express', 13, NULL, 113, 2),
+(61, 'H4, H5, H6, H7, H8, G8', '2024-09-30 13:44:18', 129.00, 'Cinecholis Lima Norte', '3', 'Mastercard', 13, NULL, 114, 3),
+(62, 'H4, H5, H6, H7, H8, G8', '2024-09-30 13:44:58', 129.00, 'Cinecholis Lima Norte', '3', 'Yape', 13, 19, NULL, 3),
+(63, 'H4, H5, H6, H7, H8, G8', '2024-09-30 13:45:46', 126.00, 'Cinecholis Lima Norte', '3', 'American Express', 13, NULL, 115, 3),
+(64, 'F7, E9, E8, F8, F9, D9, D10', '2024-09-30 14:55:14', 155.00, 'Cinecholis Trujillo Valle', '15', 'American Express', 15, NULL, 116, 1),
+(65, 'F7, E9, E8, F8, F9, D9, D10', '2024-09-30 14:55:31', 155.00, 'Cinecholis Trujillo Valle', '15', 'Yape', 15, 20, NULL, 1),
+(66, 'F9, F10, F11', '2024-09-30 16:00:33', 60.00, 'Cinecholis Lima Norte', '1', 'Visa', 23, NULL, 117, 1),
+(67, 'F9, F10, F11', '2024-09-30 16:01:19', 60.00, 'Cinecholis Lima Norte', '1', 'Yape', 23, 21, NULL, 1),
+(68, 'F9, F10, F11', '2024-09-30 16:01:43', 60.00, 'Cinecholis Lima Norte', '1', 'Mastercard', 23, NULL, 118, 1),
+(69, 'D9, D10, C10, C11, B11, B12', '2024-09-30 16:05:06', 138.00, 'Cinecholis Cuzco Plaza', '11', 'American Express', 13, NULL, 119, 5),
+(70, 'G7, G8, G9, G10', '2024-10-25 22:42:51', 50.00, 'Cinecholis Cuzco Plaza', '10', 'Mastercard', 13, NULL, 120, 3),
+(71, 'G7, G8, G9, G10', '2024-10-25 22:43:05', 50.00, 'Cinecholis Cuzco Plaza', '10', 'Yape', 13, 22, NULL, 3),
+(72, 'J1, J2, J3', '2024-10-27 20:44:40', 66.00, 'Cinecholis Cuzco Plaza', '9', 'Visa', 40, NULL, 121, 6),
+(73, 'F6, F7', '2024-10-27 20:56:00', 46.00, 'Piuracholis La Rambla', '20', 'Yape', 40, 23, NULL, 3),
+(74, 'H5, H6, H7', '2024-10-27 22:14:34', 30.00, 'Cinecholis Lima Norte', '2', 'American Express', 13, NULL, 122, 3),
+(75, 'H5, H6, H7', '2024-10-27 22:14:53', 30.00, 'Cinecholis Lima Norte', '2', 'Yape', 13, 24, NULL, 3),
+(76, 'H6, H7, G7', '2024-10-27 22:23:24', 40.00, 'Cinecholis Lima Norte', '3', 'Visa', 41, NULL, 123, 3),
+(77, 'H6, H7, G7', '2024-10-27 22:23:44', 40.00, 'Cinecholis Lima Norte', '3', 'Yape', 41, 25, NULL, 3),
+(78, 'H6, H7, G7', '2024-10-27 22:23:52', 40.00, 'Cinecholis Lima Norte', '3', 'Yape', 41, 26, NULL, 3),
+(79, 'C7, C8', '2024-10-28 15:38:25', 30.00, 'Cinecholis Lima Norte', '3', 'American Express', 13, NULL, 124, 3),
+(80, 'C7, C8', '2024-10-28 15:39:30', 30.00, 'Cinecholis Lima Norte', '3', 'American Express', 13, NULL, 125, 3),
+(81, 'J6, J7, J8', '2024-10-28 16:00:41', 30.00, 'Cinecholis Cuzco Plaza', '10', 'American Express', 43, NULL, 126, 5),
+(82, 'J7, J8, J9', '2024-10-28 16:41:46', 30.00, 'Cinecholis Lima Norte', '4', 'Visa', 44, NULL, 127, 3),
+(83, 'I7, I8, I9', '2024-11-27 23:00:43', 63.00, 'Cinecholis Cuzco Plaza', '12', 'American Express', 13, NULL, 128, 3),
+(84, 'G8, G9, F9', '2024-12-01 23:38:03', 63.00, 'Cinecholis Lima Norte', '3', 'Visa', 41, NULL, 129, 1),
+(85, 'I7, I8, I9', '2024-12-01 23:39:12', 66.00, 'Cinecholis Arequipa Centro', '7', 'American Express', 41, NULL, 130, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `salas`
+--
+
+CREATE TABLE `salas` (
+  `id` int(11) NOT NULL,
+  `cine_id` int(11) NOT NULL,
+  `nombre` varchar(50) NOT NULL,
+  `capacidad` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `salas`
+--
+
+INSERT INTO `salas` (`id`, `cine_id`, `nombre`, `capacidad`) VALUES
+(1, 1, 'Sala 1', 150),
+(2, 1, 'Sala 2', 150),
+(3, 1, 'Sala 3', 150),
+(4, 1, 'Sala 4', 150),
+(5, 2, 'Sala 5', 150),
+(6, 2, 'Sala 6', 150),
+(7, 2, 'Sala 7', 150),
+(8, 2, 'Sala 8', 150),
+(9, 3, 'Sala 9', 150),
+(10, 3, 'Sala 10', 150),
+(11, 3, 'Sala 11', 150),
+(12, 3, 'Sala 12', 150),
+(13, 4, 'Sala 13', 150),
+(14, 4, 'Sala 14', 150),
+(15, 4, 'Sala 15', 150),
+(16, 4, 'Sala 16', 150),
+(17, 5, 'Sala 17', 150),
+(18, 5, 'Sala 18', 150),
+(19, 5, 'Sala 19', 150),
+(20, 5, 'Sala 20', 150);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuarios`
+--
+
+CREATE TABLE `usuarios` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(50) NOT NULL,
+  `apellidos` varchar(100) NOT NULL,
+  `celular` varchar(15) DEFAULT NULL,
+  `dni` varchar(20) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `rol` enum('administrador','usuario') DEFAULT 'usuario',
+  `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `usuarios`
+--
+
+INSERT INTO `usuarios` (`id`, `nombre`, `apellidos`, `celular`, `dni`, `email`, `password`, `rol`, `fecha_creacion`) VALUES
+(11, 'DAFRIN STEEP', 'TUESTA CHALCO', '956964896', '74699361', 'onicha11@gmail.com', '123', 'usuario', '2024-09-26 13:07:46'),
+(12, 'HEBER JEEZER', 'INFANTE LLATAS', '956964896', '74851245', 'prueba12@gmail.com', '123', 'usuario', '2024-09-26 15:34:49'),
+(13, 'ANTHONY MAZABEL', 'COTRINA GOMEZ', '999999999', '71333702', 'anthony@gmail.com', '123', 'usuario', '2024-09-26 21:12:26'),
+(14, 'ANGIE ANELISSE', 'QUIROGA SANDOVAL', '958965236', '75236521', 'que@gmail.com', '123', 'usuario', '2024-09-27 10:10:18'),
+(15, 'NATHALIE GABRIELA', 'ESTRADA AQUINO', '995566996', '71256325', 'nathy@gmail.com', '123', 'administrador', '2024-09-27 10:12:00'),
+(23, 'CARLOS ALBERTO', 'EFFIO GONZALES', '985698658', '40478699', 'carlitos@gmail.com', '123', 'usuario', '2024-09-30 20:56:16'),
+(40, 'VICTOR RAUL', 'AYMA ROZAS', '970882229', '77378578', 'victoraymarozas@gmail.com', 'ayma123', 'usuario', '2024-10-28 00:59:32'),
+(41, 'OSCAR RAUL', 'COTRINA ZELADA', '987654321', '27080588', 'osc@gmail.com', '123', 'usuario', '2024-10-28 03:18:18'),
+(43, 'SAMUEL', 'CONDORI GOMEZ', '777999555', '75067073', 'samu@gmail.com', '234', 'usuario', '2024-10-28 20:51:26'),
+(44, 'LUIS ENRIQUE', 'TENIENTE AYMA', '734564567', '75683305', 'luis@gmail.com', '123', 'usuario', '2024-10-28 21:37:25');
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `asientos`
+--
+ALTER TABLE `asientos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sala_id` (`sala_id`);
+
+--
+-- Indices de la tabla `cines`
+--
+ALTER TABLE `cines`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_ciudad` (`id_ciudad`);
+
+--
+-- Indices de la tabla `ciudades`
+--
+ALTER TABLE `ciudades`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `funciones`
+--
+ALTER TABLE `funciones`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_cine` (`id_cine`),
+  ADD KEY `fk_id_pelicula` (`id_pelicula`);
+
+--
+-- Indices de la tabla `pagos_targeta`
+--
+ALTER TABLE `pagos_targeta`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `pagos_yape`
+--
+ALTER TABLE `pagos_yape`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `pelicula`
+--
+ALTER TABLE `pelicula`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `registro_ventas`
+--
+ALTER TABLE `registro_ventas`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_usuario` (`id_usuario`),
+  ADD KEY `fk_pago_yape` (`id_pago_yape`),
+  ADD KEY `fk_pago_targeta` (`id_pago_targeta`),
+  ADD KEY `fk_pelicula` (`id_pelicula`);
+
+--
+-- Indices de la tabla `salas`
+--
+ALTER TABLE `salas`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cine_id` (`cine_id`);
+
+--
+-- Indices de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `dni` (`dni`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `asientos`
+--
+ALTER TABLE `asientos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3001;
+
+--
+-- AUTO_INCREMENT de la tabla `funciones`
+--
+ALTER TABLE `funciones`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+
+--
+-- AUTO_INCREMENT de la tabla `pagos_targeta`
+--
+ALTER TABLE `pagos_targeta`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
+
+--
+-- AUTO_INCREMENT de la tabla `pagos_yape`
+--
+ALTER TABLE `pagos_yape`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+
+--
+-- AUTO_INCREMENT de la tabla `pelicula`
+--
+ALTER TABLE `pelicula`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+
+--
+-- AUTO_INCREMENT de la tabla `registro_ventas`
+--
+ALTER TABLE `registro_ventas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
+
+--
+-- AUTO_INCREMENT de la tabla `salas`
+--
+ALTER TABLE `salas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `asientos`
+--
+ALTER TABLE `asientos`
+  ADD CONSTRAINT `asientos_ibfk_1` FOREIGN KEY (`sala_id`) REFERENCES `salas` (`id`);
+
+--
+-- Filtros para la tabla `cines`
+--
+ALTER TABLE `cines`
+  ADD CONSTRAINT `cines_ibfk_1` FOREIGN KEY (`id_ciudad`) REFERENCES `ciudades` (`id`);
+
+--
+-- Filtros para la tabla `funciones`
+--
+ALTER TABLE `funciones`
+  ADD CONSTRAINT `fk_id_pelicula` FOREIGN KEY (`id_pelicula`) REFERENCES `pelicula` (`id`),
+  ADD CONSTRAINT `funciones_ibfk_2` FOREIGN KEY (`id_cine`) REFERENCES `cines` (`id`);
+
+--
+-- Filtros para la tabla `registro_ventas`
+--
+ALTER TABLE `registro_ventas`
+  ADD CONSTRAINT `fk_pago_targeta` FOREIGN KEY (`id_pago_targeta`) REFERENCES `pagos_targeta` (`id`),
+  ADD CONSTRAINT `fk_pago_yape` FOREIGN KEY (`id_pago_yape`) REFERENCES `pagos_yape` (`id`),
+  ADD CONSTRAINT `fk_pelicula` FOREIGN KEY (`id_pelicula`) REFERENCES `pelicula` (`id`),
+  ADD CONSTRAINT `fk_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`);
+
+--
+-- Filtros para la tabla `salas`
+--
+ALTER TABLE `salas`
+  ADD CONSTRAINT `salas_ibfk_1` FOREIGN KEY (`cine_id`) REFERENCES `cines` (`id`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+DELETE FROM registro_ventas WHERE id_usuario = 45;
+DELETE FROM usuarios WHERE id = 45;
+
+select * from pagos_targeta
